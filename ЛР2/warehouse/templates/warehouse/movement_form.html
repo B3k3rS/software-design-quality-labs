@@ -1,0 +1,17 @@
+{% extends "warehouse/base.html" %}
+{% block title %}Нова операція{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">Нова операція</h1>
+<form method="post" style="max-width: 480px">
+  {% csrf_token %}
+  {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+  {% for field in form %}
+  <div class="mb-3">
+    <label class="form-label">{{ field.label }}</label>
+    {{ field }}
+    {% for e in field.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+  </div>
+  {% endfor %}
+  <button class="btn btn-primary" type="submit">Зберегти</button>
+</form>
+{% endblock %}
