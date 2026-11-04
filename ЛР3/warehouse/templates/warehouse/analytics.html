@@ -1,0 +1,41 @@
+{% extends "warehouse/base.html" %}
+{% block title %}Аналітика{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">Аналітика складу</h1>
+{% if not report %}
+<div class="alert alert-secondary">Немає даних для аналізу. Виконайте python manage.py generate_history</div>
+{% else %}
+<p class="text-muted">Період: {{ report.start|date:"d.m.Y" }} - {{ report.end|date:"d.m.Y" }}. Операцій: {{ report.operations }}, відвантажено {{ report.shipped }} шт., прийнято {{ report.received }} шт.</p>
+
+<h2 class="h5 mt-4">Прогноз витрати на {{ report.horizon }} днів</h2>
+<table class="table">
+  <thead><tr><th>Артикул</th><th>Товар</th><th class="text-end">Залишок</th><th class="text-end">Середнє за день</th><th class="text-end">Прогноз за день</th><th class="text-end">Тренд за 30 днів</th><th class="text-end">Вистачить на, днів</th><th class="text-end">Замовити</th></tr></thead>
+  <tbody>
+  {% for r in report.forecast %}
+  <tr>
+    <td>{{ r.sku }}</td>
+    <td>{{ r.name }}</td>
+    <td class="text-end">{{ r.quantity }}</td>
+    <td class="text-end">{{ r.avg }}</td>
+    <td class="text-end">{{ r.per_day }}</td>
+    <td class="text-end">{{ r.trend }}</td>
+    <td class="text-end {% if r.days_left is not None and r.days_left < report.horizon %}text-danger fw-bold{% endif %}">{{ r.days_left|default:"-" }}</td>
+    <td class="text-end">{% if r.order %}{{ r.order }}{% else %}-{% endif %}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<h2 class="h5 mt-4">Аномальні дні відвантаження</h2>
+<table class="table">
+  <thead><tr><th>Дата</th><th class="text-end">Відвантажено, шт.</th><th class="text-end">z-оцінка</th></tr></thead>
+  <tbody>
+  {% for a in report.anomalies %}
+  <tr><td>{{ a.date|date:"d.m.Y" }}</td><td class="text-end">{{ a.quantity }}</td><td class="text-end">{{ a.z }}</td></tr>
+  {% empty %}
+  <tr><td colspan="3" class="text-muted">Аномалій не знайдено</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+{% endblock %}
