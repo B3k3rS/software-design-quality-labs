@@ -1,0 +1,25 @@
+{% extends "warehouse/base.html" %}
+{% block title %}Телеметрія{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">Телеметрія пристроїв (MongoDB)</h1>
+{% if error %}
+<div class="alert alert-danger">{{ error }}</div>
+{% else %}
+<p class="text-muted">Документів у колекції telemetry: {{ count }}</p>
+<table class="table">
+  <thead><tr><th>Час</th><th>Пристрій</th><th>Тип</th><th>Дані</th></tr></thead>
+  <tbody>
+  {% for d in documents %}
+  <tr>
+    <td>{{ d.timestamp|date:"d.m.Y H:i:s" }}</td>
+    <td>{{ d.device }}</td>
+    <td>{{ d.type }}</td>
+    <td>{% for key, value in d.data.items %}{{ key }}: {{ value }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+  </tr>
+  {% empty %}
+  <tr><td colspan="4" class="text-muted">Документів немає. Виконайте python manage.py mongo_demo</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+{% endblock %}

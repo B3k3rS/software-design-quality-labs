@@ -1,0 +1,20 @@
+{% extends "warehouse/base.html" %}
+{% block content %}
+<h1 class="h3 mb-3">Товари на складі</h1>
+<table class="table">
+  <thead><tr><th>Артикул</th><th>Назва</th><th>Кількість</th><th>Мінімум</th><th></th></tr></thead>
+  <tbody>
+  {% for p in products %}
+  <tr>
+    <td>{{ p.sku }}</td>
+    <td>{{ p.name }}</td>
+    <td>{{ p.quantity }}</td>
+    <td>{{ p.min_quantity }}</td>
+    <td>{% if p.needs_reorder %}<span class="badge text-bg-danger">дозамовити</span>{% endif %}</td>
+  </tr>
+  {% empty %}
+  <tr><td colspan="5" class="text-muted">Товарів немає. Виконайте python manage.py seed_warehouse</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

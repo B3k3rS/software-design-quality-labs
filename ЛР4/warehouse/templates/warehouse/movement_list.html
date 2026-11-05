@@ -1,0 +1,21 @@
+{% extends "warehouse/base.html" %}
+{% block title %}Операції{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">Журнал операцій</h1>
+<table class="table">
+  <thead><tr><th>Час</th><th>Операція</th><th>Товар</th><th>Кількість</th><th>Пристрій</th></tr></thead>
+  <tbody>
+  {% for m in movements %}
+  <tr>
+    <td>{{ m.created_at|date:"d.m.Y H:i" }}</td>
+    <td>{{ m.get_movement_type_display }}</td>
+    <td>{{ m.product }}</td>
+    <td>{{ m.quantity }}</td>
+    <td>{{ m.device|default:"" }}</td>
+  </tr>
+  {% empty %}
+  <tr><td colspan="5" class="text-muted">Операцій ще немає</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
