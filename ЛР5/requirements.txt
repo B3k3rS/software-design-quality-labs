@@ -1,0 +1,8 @@
+Django>=5.0
+uWSGI>=2.0
+supervisor>=4.2
+pymongo>=4.6
+numpy>=2.0
+pandas>=2.2
+scikit-learn>=1.5
+paho-mqtt>=2.0
